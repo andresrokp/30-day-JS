@@ -1,6 +1,6 @@
-import { doTask1, doTask2, doTask3 } from './tasks';
+let { doTask1, doTask2, doTask3 } = require('./L37-auxTasks');
 
-export function runCode() {
+function runCode() {
   const strings = [];
   return new Promise((resolve) => {
     doTask1((rta1) => {
@@ -15,3 +15,5 @@ export function runCode() {
     })
   })
 }
+
+runCode().then(response => console.log(response))
