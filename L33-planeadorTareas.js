@@ -1,40 +1,42 @@
 let log = console.log
-log('\n\n\n-----------------------\n--------------------------\n\n\n')
+log('\n\n\n-------------------------\n--------------------------\n\n\n')
 
 function createTaskPlanner() {
-  let tasks = [];
-  return {
-    addTask(task) {
-      tasks.push({ ...task, completed: false });
+  let tasks = []
+  return{
+    // spread el objeto entrante, agrega la key comleted y conforma el nuevo objeto
+    addTask(task){tasks.push({...task, completed: false})},
+    // filtra para True cuando el id o el name NO coinciden
+    removeTask(val){
+      tasks = tasks.filter(t=> !(val == t.id || val == t.name));
     },
-    removeTask(val) {
-      tasks = tasks.filter((t) => t.id != val || t.name != val);
-    },
-    getTasks() {
+    getTasks(){
       return tasks;
     },
-    getPendingTasks() {
-      return tasks.filter((t) => t.completed == false);
+    getPendingTasks(){
+      return tasks.filter(t=> t.completed == false);
     },
-    getCompletedTasks() {
-      return tasks.filter((t) => t.completed == true);
+    getCompletedTasks(){
+      return tasks.filter(t=> t.completed == true);
     },
-    markTaskAsCompleted(val) {
-      tasks.find((t) => t.id == val || t.name == val).completed = true;
+    // trae el elemento que tiene id o tiene name y le pone true a su 'completed'
+    markTaskAsCompleted(val){
+      tasks.find(t=> val == t.id || val == t.name).completed = true;
     },
-    getSortedTasksByPriority() {
-      return tasks.sort((a, b) => {a.priority - b.priority});
+    // reconstruye un arreglo desde el original y lo organiza descendentemente
+    getSortedTasksByPriority(){
+      return [...tasks].sort((a,b)=>a.priority - b.priority);
     },
-    filterTasksByTag(val){
-      return tasks.filter(t=>t.tags.some(tg=>tg == val));
+    // filtra con True para cuando alguno (some) de los elementos en los tags de la task cumple la condición
+    filterTasksByTag(tag){
+      return tasks.filter(tk=> tk.tags.some(tg=>tg == tag));
     },
-    updateTask(taskId,updates){
-        let task = tasks.find(t=>t.id == taskId)
-        for(let prop in updates){
-            task[prop] = updates.prop
-        }
-    }
-  };
+    // toma la task que coincide con el id. Itera sobre el objeto update y actualiza las propiedades
+    updateTask(taskId, updates){
+      let task = tasks.find(t=>t.id == taskId);
+      for(let key in updates) task[key] = updates[key];
+    },
+  }
 }
 
 // test mocks
@@ -88,14 +90,14 @@ planner.removeTask(5);
 let ans1 = planner.getPendingTasks();
 log('1\n',ans1)
 planner.markTaskAsCompleted("Llamar a Juan");
+planner.markTaskAsCompleted(6);
 let ans2 = planner.getCompletedTasks();
+log('2\n',ans2)
 let ans3 = planner.getPendingTasks();
 log('3\n',ans3)
 let ans4 = planner.getSortedTasksByPriority();
 log('4\n',ans4)
 let ans5 = planner.filterTasksByTag("shopping");
-planner.updateTask(6,{name:'6 change',tags:['tag6a','tag6b','tag6c']})
+planner.updateTask(6,{completed:false,name:'6 change',tags:['tuRaja','tag6b','tag6c']})
 let ans6 = planner.getTasks()
 log('6\n',ans6)
-
-
